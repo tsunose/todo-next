@@ -6,8 +6,8 @@ import { normalizeTodos, todoNormalizrSchemaKey } from './models'
 export function* fetchTasksSaga() {
   try {
     let todos = yield call(apis.getTodos)
-    // todos = todos.data.map((el) => {
-      todos = todos.map((el) => {
+    todos = todos.data.map((el) => {
+      // todos = todos.map((el) => { // MOCK
       return {
         id: el.id,
         content: el.content,
@@ -28,6 +28,7 @@ export function* fetchTasksSaga() {
       yield put(fetchTodoSuccess([], {}))
     }
   } catch (error) {
+    // TODO
     console.log(error)
   } finally {
     // TODO: ローディングストップ処理
@@ -38,11 +39,18 @@ export function* createTodoSaga(action) {
   try {
     const res = yield call(apis.createTodo, action.payload.todo.content)
     const normalized = normalizeTodos([{
-      id: res.id,
-      content: res.content,
-      isEnd: res.is_end,
-      deletedAt: res.deleted_at,
-    }])
+      id: res.data.id,
+      content: res.data.content,
+      isEnd: res.data.is_end,
+      deletedAt: res.data.deleted_at,
+    }]);
+    // MOCK
+    // const normalized = normalizeTodos([{
+    //   id: res.id,
+    //   content: res.content,
+    //   isEnd: res.is_end,
+    //   deletedAt: res.deleted_at,
+    // }])
     yield put(
       createTodoSuccess(
         normalized.result,
@@ -50,6 +58,7 @@ export function* createTodoSaga(action) {
       )
     );
   } catch (error) {
+    // TODO
     console.log(error)
   } finally {
     // TODO: ローディングストップ処理
